@@ -48,7 +48,7 @@ def build_block_header(block: BlockData) -> BlockHeader:
     header = BlockHeader(
         block["parentHash"],
         block["sha3Uncles"],
-        to_bytes(int(block["miner"], 16)),
+        to_bytes(block["miner"]),
         block["stateRoot"],
         block['transactionsRoot'],
         block["receiptsRoot"],

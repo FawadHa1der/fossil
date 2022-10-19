@@ -144,7 +144,7 @@ async def test_extract_list_values(factory):
 @pytest.mark.asyncio
 async def test_extract_list_from_account_rlp_entry(factory):
     starknet, extract_rlp_contract = factory
-    input_hex = '0xf8440180a0199c2e6b850bcc9beaea25bf1bacc5741a7aad954d28af9b23f4b53f5404937ba04e36f96ee1667a663dfaac57c4d185a0e369a3a217e0079d49620f34f85d1ac7' 
+    input_hex = '0xe214a0dfe4ce00987e5e1f5880c6b9ec551f026f954fe1867c6583f6c0a4644c497e07' 
     input = Data.from_hex(input_hex)
 
     to_list_call = await extract_rlp_contract.test_to_list(input.to_ints().length, input.to_ints().values).call()

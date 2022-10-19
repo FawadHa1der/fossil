@@ -36,11 +36,19 @@ func count_shared_prefix_len{range_check_ptr}(
     assert_not_equal(node_path_decoded.element_size_bytes, 0);
 
     // Extract node_path
-    // Assumption that the first word of the proof element will be always a full word(8 bytes)
-    let (first_nibble) = extract_nibble(node_path_decoded.element[0], 8, 0);
+    // Assumption that the first word of the proof element will be always a full word(8 bytes) with a size caveat
+    local size_less_than_word = is_le(node_path_decoded.element_size_bytes, 8);
+    local size_to_extract;
+    if (size_less_than_word == 1){
+        size_to_extract = node_path_decoded.element_size_bytes;
+    } else {
+        size_to_extract = 8;
+    }
+
+    let (first_nibble) = extract_nibble(node_path_decoded.element[0], size_to_extract, 0);
 
     local skip_nibbles;
-
+    
     if (first_nibble == 0) {
         skip_nibbles = 2;
     } else {
@@ -57,11 +65,6 @@ func count_shared_prefix_len{range_check_ptr}(
                 }
             }
         }
-    }
-
-    local skipped_nibbles_above_size = is_le(element_rlp.element_size_bytes, skip_nibbles);
-    if (skipped_nibbles_above_size == 1) {
-        return (path_offset,);
     }
 
     let (shared_prefix) = count_shared_prefix_len_rec(
@@ -81,14 +84,17 @@ func count_shared_prefix_len_rec{range_check_ptr}(
     let node_path_nibbles_len = node_path_decoded.element_size_bytes * 2 - skip_nibbles;
     let path_nibbles_len = path.element_size_bytes * 2;
 
+    // making sure current_index is within range
+    local path_index_range_check = is_le(node_path_decoded.element_size_bytes* 2, current_index + skip_nibbles);
+
+    if (path_index_range_check == 1) {
+        return (current_index,);
+    }
+
     // current_index + path_offset >= len(path)
     local path_completed = is_le(path_nibbles_len, current_index + path_offset);
     // current_index >= len(node_path)
     local node_path_completed = is_le(node_path_nibbles_len, current_index);
-
-    if (path_completed + node_path_completed == 2) {
-        return (current_index,);
-    }
 
     let (current_path_nibble) = extract_nibble_from_words(path, current_index + path_offset);
     let (current_node_path_nibble) = extract_nibble_from_words(
@@ -133,6 +139,7 @@ func verify_proof{range_check_ptr, bitwise_ptr: BitwiseBuiltin*}(
     let (empty_arr) = alloc();
     local empty_hash: IntsSequence = IntsSequence(empty_arr, 0, 0);
 
+
     let (local res: IntsSequence) = verify_proof_rec{keccak_ptr=keccak_ptr}(
         path, root_hash, proof, proof_len, empty_hash, 0, 0
     );
@@ -151,8 +158,6 @@ func verify_proof_rec{keccak_ptr: felt*, range_check_ptr, bitwise_ptr: BitwiseBu
     current_index: felt,
 ) -> (res: IntsSequence) {
     alloc_locals;
-
-    // let (local keccak_ptr : felt*) = alloc()
 
     if (current_index == proof_len + 1) {
         assert 1 = 0;
@@ -185,6 +190,7 @@ func verify_proof_rec{keccak_ptr: felt*, range_check_ptr, bitwise_ptr: BitwiseBu
     // Handle leaf node otherwise branch node
     if (node_len == 2) {
         // Leaf node logic goes here
+
         let (current_path_offset) = count_shared_prefix_len(
             path_offset, path, current_element, node[0]
         );

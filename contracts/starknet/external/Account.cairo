@@ -6,7 +6,7 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin, BitwiseBuiltin
 from starkware.starknet.common.syscalls import get_tx_info
 
-from starknet.external.library import Account, AccountCallArray
+from contracts.starknet.external.library import Account, AccountCallArray
 
 //
 // Constructor

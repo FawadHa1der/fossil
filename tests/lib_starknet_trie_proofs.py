@@ -31,7 +31,7 @@ def event_loop():
 
 async def setup():
     starknet = await Starknet.empty()
-    trie_proofs_contract = await starknet.deploy(source="contracts/starknet/test/TestTrieProofs.cairo", cairo_path=["contracts"])
+    trie_proofs_contract = await starknet.deploy(source="contracts/starknet/test/TestTrieProofs.cairo", cairo_path=["contracts"], disable_hint_validation=True)
     return TestsDeps(
         starknet=starknet,
         trie_proofs_contract=trie_proofs_contract
@@ -47,10 +47,11 @@ async def test_count_shared_prefix_len(factory):
     starknet, trie_proofs_contract = factory
 
     # Inputs
-    proof = trie_proofs[1]['accountProof']
+    proof = trie_proofs[3]['accountProof']
     element_rlp = Data.from_hex(proof[len(proof) - 1])
 
-    path = Data.from_hex(Web3.keccak(hexstr=trie_proofs[1]['address']).hex())
+
+    path = Data.from_hex(Web3.keccak(hexstr=trie_proofs[3]['address']).hex())
     path_offset = 7
 
     # Get expected values
@@ -101,9 +102,9 @@ async def test_get_next_element_hash(factory):
 async def test_verify_valid_account_proof(factory):
     starknet, trie_proofs_contract = factory
 
-    block_state_root = Data.from_hex('0x2045bf4ea5561e88a4d0d9afbc316354e49fe892ac7e961a5e68f1f4b9561152')
-    proof_path = Data.from_hex(Web3.keccak(hexstr=trie_proofs[1]['address']).hex())
-    proof = list(map(lambda element: Data.from_hex(element).to_ints(), trie_proofs[1]['accountProof']))
+    block_state_root = Data.from_hex('0x859360abc4f7ba9fab2650b836667de32594f3f2472e71c7f16d7b10fb52790e')
+    proof_path = Data.from_hex(Web3.keccak(hexstr=trie_proofs[3]['address']).hex())
+    proof = list(map(lambda element: Data.from_hex(element).to_ints(), trie_proofs[3]['accountProof']))
 
     # Python implementation as a reference
     expected_key = Data.from_ints(verify_proof(
@@ -173,6 +174,7 @@ async def test_verify_valid_storage_proof(factory):
     ).call()
 
     result = Data.from_ints(IntsSequence(verify_proof_call.result.res, verify_proof_call.result.res_size_bytes))
+    print("Steps :", verify_proof_call.call_info.execution_resources.n_steps)
 
     assert result == expected_key
 

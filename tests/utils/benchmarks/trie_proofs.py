@@ -1,8 +1,8 @@
+from base64 import decode
 from typing import List
 
 from utils.helpers import hex_string_to_words64, keccak_words64, words64_to_nibbles, words64_to_nibbles, IntsSequence
 from utils.rlp import extractData, to_list, RLPItem, isRlpList_RlpItem
-
 
 EMPTY_TRIE_ROOT_HASH = "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"
 
@@ -23,9 +23,13 @@ def merkle_patricia_input_decode(input: IntsSequence) -> List[int]:
     else:
         assert False
 
-    if skip_nibbles >= input.length:
-        return []
-    return words64_to_nibbles(input, skip_nibbles)
+
+    # if skip_nibbles > input.length:
+    #     print("XXXXXXXXXXXXXXXXXXX")
+    #     return []
+
+    decoded = words64_to_nibbles(input, skip_nibbles)
+    return decoded
 
 
 def count_shared_prefix_len(
@@ -48,7 +52,13 @@ def count_shared_prefix_len(
     if current_index + current_path_offset >= len(path) and current_index >= len(node_path):
         return current_index
     else:
-        if path[current_index + current_path_offset] != node_path[current_index]:
+        print("current_index", current_index)
+        print("current_path_offset", current_path_offset)
+        print("path length", len(path))
+        print("node_path length", len(node_path))
+        if len(node_path) <= current_index:
+            return current_index
+        if (path[current_index + current_path_offset] != node_path[current_index]) :
             return current_index
         else:
             return count_shared_prefix_len(current_path_offset, path, node_path, current_index + 1)
@@ -91,7 +101,6 @@ def verify_proof(
 
     next_hash = IntsSequence([], 0)
     path_offset = 0
-
     for i in range(0, len(proof)):
         element_rlp = proof[i]
 
@@ -99,13 +108,16 @@ def verify_proof(
             assert root_hash == keccak_words64(element_rlp)
         else:
             if next_hash != keccak_words64(element_rlp):
+                print("i", i)
+                print("element rlp", element_rlp)
                 assert next_hash == keccak_words64(element_rlp)
 
         node = to_list(element_rlp)
 
         # Handle leaf node
         if len(node) == 2:
-            node_path = merkle_patricia_input_decode(extractData(element_rlp, node[0].dataPosition, node[0].length))
+            mydata = extractData(element_rlp, node[0].dataPosition, node[0].length)
+            node_path = merkle_patricia_input_decode(mydata)
             path_offset += count_shared_prefix_len(path_offset, words64_to_nibbles(path), node_path)
             if i == len(proof) - 1:
                 assert path_offset == path.length*2 # Unexpected end of proof (leaf)

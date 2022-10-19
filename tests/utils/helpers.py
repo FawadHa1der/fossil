@@ -88,6 +88,8 @@ def word64_to_nibbles_rec(word: int, nibbles_len: int, accumulator: List[int] = 
         print(f"nibbles_len: {nibbles_len}")
     assert nibbles_len > 0
     if nibbles_len == 1:
+        print(f"accumulator: {accumulator}")
+        print(f"word & 0xF: {[word & 0xF]}")
         return accumulator + [word & 0xF]
     return word64_to_nibbles_rec(word=(word >> 4), nibbles_len=nibbles_len-1, accumulator=accumulator) + [(word & 0xF)]
 
@@ -99,15 +101,23 @@ def word64_to_nibbles(input: IntsSequence) -> List[int]:
 def words64_to_nibbles(input: IntsSequence, skip_nibbles: int = 0) -> List[int]:
     (_, remainder) = divmod(input.length * 2, 16)
     acc = []
+    # print(f"input.length: {input.length}")
+    # print(f"remainder: {remainder}")
+    # print(f"skip_nibbles: {skip_nibbles}")
+    # print(f"input.values: {input.values}")
     for i in range(0, len(input.values)):
         word = input.values[i]
         nibbles_len = 16
         if i == len(input.values) - 1: # For the last word skip empty bits
+            # print(f"i == len(input.values)")
             nibbles_len = 16 if remainder == 0 else remainder
         if i == 0 and skip_nibbles > 0: # If first word and some nibbles skipped
+            # print(f"i == 0 and skip_nibbles > 0")
             acc.extend(word64_to_nibbles_rec(word=word, nibbles_len=nibbles_len-skip_nibbles))
         else:
+            # print(f"else i == 0 and skip_nibbles > 0")
             acc.extend(word64_to_nibbles_rec(word=word, nibbles_len=nibbles_len))
+    # print(f"return acc: {acc}")
     return acc
 
 def byte_to_nibbles(input_byte: int) -> Tuple[int, int]:
