@@ -1,0 +1,154 @@
+[
+    {
+        "data": [
+            {
+                "name": "start_block",
+                "type": "felt"
+            },
+            {
+                "name": "end_block",
+                "type": "felt"
+            },
+            {
+                "name": "avg_header_param",
+                "type": "felt"
+            },
+            {
+                "name": "callback_address",
+                "type": "felt"
+            },
+            {
+                "name": "computation_id",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "computation_registered",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "computation_id",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "computation_finalized",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "get_initialized",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_l1_headers_store_addr",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "computation_id",
+                "type": "felt"
+            },
+            {
+                "name": "slot",
+                "type": "felt"
+            }
+        ],
+        "name": "get_twap_computation_cache",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "l1_headers_store_addr",
+                "type": "felt"
+            }
+        ],
+        "name": "initialize",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "start_block",
+                "type": "felt"
+            },
+            {
+                "name": "end_block",
+                "type": "felt"
+            },
+            {
+                "name": "avg_header_param",
+                "type": "felt"
+            },
+            {
+                "name": "callback_address",
+                "type": "felt"
+            }
+        ],
+        "name": "register_computation",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "computation_id",
+                "type": "felt"
+            },
+            {
+                "name": "block_headers_lens_bytes_len",
+                "type": "felt"
+            },
+            {
+                "name": "block_headers_lens_bytes",
+                "type": "felt*"
+            },
+            {
+                "name": "block_headers_lens_words_len",
+                "type": "felt"
+            },
+            {
+                "name": "block_headers_lens_words",
+                "type": "felt*"
+            },
+            {
+                "name": "block_headers_concat_len",
+                "type": "felt"
+            },
+            {
+                "name": "block_headers_concat",
+                "type": "felt*"
+            }
+        ],
+        "name": "compute",
+        "outputs": [],
+        "type": "function"
+    }
+]

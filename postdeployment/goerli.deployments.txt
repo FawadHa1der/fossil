@@ -1,0 +1,1 @@
+0x076296f6831dca18faf238df75e2cc6fbc89744b145ffc97d0f38f88ecbeb11c:artifacts/abis/CallbackReceiver.json
