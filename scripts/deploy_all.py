@@ -39,8 +39,7 @@ def get_gateway_client() -> GatewayClient:
 @pytest.mark.asyncio
 async def test_create_account():
     secrets = json.load(open('secrets.json'))
-    gateway_url = "https://alpha4.starknet.io/"
-    gateway_client = get_gateway_client(gateway_url)
+    gateway_client = get_gateway_client()
     l2_priv_key = secrets['l2_priv_key']
 
     account_client = await AccountClient.create_account(
@@ -71,17 +70,19 @@ async def test_deploy():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     contract_path = os.path.join(dir_path, 'contracts', 'starknet', 'L1MessagesProxy.cairo')
     deployment_result = await Contract.deploy(
-        client=account_client, compilation_source=['/Users/fawad/ethapps/fossil/contracts/starknet/L1MessagesProxy.cairo']
+        client=account_client, compilation_source=['contracts/starknet/L1MessagesProxy.cairo']
     )
-
+    print(f"Deployment result: {deployment_result}")
     # Wait until deployment transaction is accepted
     await deployment_result.wait_for_acceptance()
     # Get deployed contract
     l2_msg_contract = deployment_result.deployed_contract
     
     deployment_result = await Contract.deploy(
-        client=account_client, compilation_source=['/Users/fawad/ethapps/fossil/contracts/starknet/L1HeadersStore.cairo'], search_paths=['/Users/fawad/ethapps/fossil/contracts']
+        client=account_client, compilation_source=['contracts/starknet/L1HeadersStore.cairo'], search_paths=['contracts']
     )
+    print(f"Deployment result: {deployment_result}")
+    
     # Wait until deployment transaction is accepted
     await deployment_result.wait_for_acceptance()
     # Get deployed contract
@@ -107,6 +108,7 @@ async def test_deploy():
         'gas': 2000000,
         'gasPrice': w3.toWei('20', 'gwei')
     })
+    print(f"deployment_tx: {deployment_tx}")
 
     signed = account.sign_transaction(deployment_tx)
     tx_hash = w3.eth.sendRawTransaction(signed.rawTransaction).hex()
@@ -119,7 +121,7 @@ async def test_deploy():
     l2_msg_contract_owner = int(l2_account_address)
     await (await l2_msg_contract.functions["initialize"].invoke(int(l1_contract_addr, 16), l2_headers_contract.address, l2_msg_contract_owner, max_fee=int(1e16))).wait_for_acceptance()
     deployment_result = await Contract.deploy(
-        client=account_client, compilation_source=['/Users/fawad/ethapps/fossil/contracts/starknet/TWAP.cairo'], search_paths=['/Users/fawad/ethapps/fossil/contracts']
+        client=account_client, compilation_source=['contracts/starknet/TWAP.cairo'], search_paths=['contracts']
     )
 
     # Wait until deployment transaction is accepted
@@ -130,7 +132,7 @@ async def test_deploy():
 
 
     deployment_result = await Contract.deploy(
-        client=account_client, compilation_source=['/Users/fawad/ethapps/fossil/contracts/starknet/FactsRegistry.cairo'], search_paths=['/Users/fawad/ethapps/fossil/contracts']
+        client=account_client, compilation_source=['contracts/starknet/FactsRegistry.cairo'], search_paths=['contracts']
     )
 
     # Wait until deployment transaction is accepted
