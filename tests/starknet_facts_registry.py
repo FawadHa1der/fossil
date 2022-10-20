@@ -84,20 +84,8 @@ async def registry_initialized():
     assert block_parent_hash.to_hex() == block_header.hash().hex()
 
     # Submit blockhash from L1
-    # await l1_relayer_signer.send_transaction(
-    #     l1_relayer_account,
-    #     storage_proof.contract_address,
-    #     'receive_from_l1',
-    #     [len(block_parent_hash.to_ints(Encoding.BIG).values)] + block_parent_hash.to_ints(Encoding.BIG).values + [mocked_blocks[4]['number'] + 1])
-
     await storage_proof.receive_from_l1(block_parent_hash.to_ints(Encoding.BIG).values, mocked_blocks[4]['number'] + 1).execute(caller_address=l1_relayer_account.contract_address)
 
-    # await l1_relayer_signer.send_transaction(
-    #     l1_relayer_account,
-    #     storage_proof.contract_address,
-    #     'process_block',        
-    #     [2**BlockHeaderIndexes.STATE_ROOT] + [block['number']] + [block_rlp.length] + [len(block_rlp.values)] + block_rlp.values
-    # )
     await storage_proof.process_block(2**BlockHeaderIndexes.STATE_ROOT, block['number'], block_rlp.length , block_rlp.values).execute(caller_address=l1_relayer_account.contract_address)
 
     return RegistryTestsDeps(
@@ -258,8 +246,7 @@ async def test_get_storage(registry_initialized):
 @pytest.mark.asyncio
 async def test_get_storage_uint(registry_initialized):
     starknet, facts_registry, storage_proof, account, signer, l1_relayer_account, l1_relayer_signer = registry_initialized
-
-    account_proof = list(map(lambda element: Data.from_hex(element).to_ints(), trie_proofs[2]['accountProof']))
+    account_proof = list(map(lambda element: Data.from_hex(element).to_ints(), trie_proofs[3]['accountProof']))
     flat_account_proof = []
     flat_account_proof_sizes_bytes = []
     flat_account_proof_sizes_words = []
@@ -270,7 +257,7 @@ async def test_get_storage_uint(registry_initialized):
 
     options_set = 15 # saves everything in state
 
-    l1_account_address = Data.from_hex(trie_proofs[1]['address'])
+    l1_account_address = Data.from_hex(trie_proofs[3]['address'])
     account_words64 = l1_account_address.to_ints()
 
     tx = await signer.send_transaction(
@@ -279,7 +266,7 @@ async def test_get_storage_uint(registry_initialized):
         "prove_account",
         [
             options_set,
-            mocked_blocks[3]['number'],
+            mocked_blocks[4]['number'],
             account_words64.values[0],
             account_words64.values[1],
             account_words64.values[2],
@@ -292,9 +279,9 @@ async def test_get_storage_uint(registry_initialized):
 
     print(f"Prove account, execution number of steps: {tx.call_info.execution_resources.n_steps}")
 
-    slot = Data.from_hex(trie_proofs[2]['storageProof'][0]['key']).to_ints()
+    slot = Data.from_hex(trie_proofs[3]['storageProof'][0]['key']).to_ints()
 
-    storage_proof = list(map(lambda element: Data.from_hex(element).to_ints(), trie_proofs[2]['storageProof'][0]['proof']))
+    storage_proof = list(map(lambda element: Data.from_hex(element).to_ints(), trie_proofs[3]['storageProof'][0]['proof']))
     flat_storage_proof = []
     flat_storage_proof_sizes_bytes = []
     flat_storage_proof_sizes_words = []
@@ -304,9 +291,9 @@ async def test_get_storage_uint(registry_initialized):
         flat_storage_proof_sizes_words += [len(proof_element.values)]
 
     get_balance_call = await facts_registry.get_storage_uint(
-        mocked_blocks[3]['number'],
-        int(trie_proofs[2]['address'][2:], 16),
-        tuple(slot.values),
+        mocked_blocks[4]['number'],
+        int(trie_proofs[3]['address'][2:], 16),
+        (0,0,0,0),# its slot 0 anyways, will fix later
         flat_storage_proof_sizes_bytes,
         flat_storage_proof_sizes_words,
         flat_storage_proof).call()
