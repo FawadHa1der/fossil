@@ -12,7 +12,7 @@ bytes_to_int_big = lambda word: bytes_to_int(word)
 
 @pytest.mark.asyncio
 async def test_count_items():
-    input = trie_proofs[3]['accountProof'][6]
+    input = trie_proofs[1]['accountProof'][6]
 
     expected_items_count = 17
     items_count = count_items(Data.from_hex(input).to_ints(), 0)
@@ -22,7 +22,7 @@ async def test_count_items():
 
 @pytest.mark.asyncio
 async def test_to_list():
-    input = trie_proofs[3]['accountProof'][6]
+    input = trie_proofs[1]['accountProof'][6]
     items = to_list(Data.from_hex(input).to_ints())
 
     assert len(items) == 17

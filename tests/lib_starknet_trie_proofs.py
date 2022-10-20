@@ -98,11 +98,52 @@ async def test_get_next_element_hash(factory):
     assert Data.from_ints(IntsSequence(result, 32)) == Data.from_ints(expected_result)
 
 
+
 @pytest.mark.asyncio
-async def test_verify_valid_account_proof(factory):
+async def test_verify_valid_account_proof_1(factory):
     starknet, trie_proofs_contract = factory
 
-    block_state_root = Data.from_hex('0x859360abc4f7ba9fab2650b836667de32594f3f2472e71c7f16d7b10fb52790e')
+    block_state_root = Data.from_hex('0x2045bf4ea5561e88a4d0d9afbc316354e49fe892ac7e961a5e68f1f4b9561152')
+    proof_path = Data.from_hex(Web3.keccak(hexstr=trie_proofs[1]['address']).hex())
+    proof = list(map(lambda element: Data.from_hex(element).to_ints(), trie_proofs[1]['accountProof']))
+
+    # Python implementation as a reference
+    expected_key = Data.from_ints(verify_proof(
+        proof_path.to_ints(),
+        block_state_root.to_ints(),
+        proof)
+    )
+
+    flat_proof = []
+    flat_proof_sizes_bytes = []
+    flat_proof_sizes_words = []
+
+    for proof_element in proof:
+        flat_proof += proof_element.values
+        flat_proof_sizes_bytes += [proof_element.length]
+        flat_proof_sizes_words += [len(proof_element.values)]
+
+    verify_proof_call = await trie_proofs_contract.test_verify_proof(
+        proof_path.to_ints().length,
+        proof_path.to_ints().values,
+        block_state_root.to_ints().length,
+        block_state_root.to_ints().values,
+        flat_proof_sizes_bytes,
+        flat_proof_sizes_words,
+        flat_proof
+    ).call()
+
+    print("Steps :", verify_proof_call.call_info.execution_resources.n_steps)
+
+    result = Data.from_ints(IntsSequence(verify_proof_call.result.res, verify_proof_call.result.res_size_bytes))
+
+    assert result == expected_key
+
+@pytest.mark.asyncio
+async def test_verify_valid_account_proof_2(factory):
+    starknet, trie_proofs_contract = factory
+
+    block_state_root = Data.from_hex('0xa8e9116138c16f068e324a7959e60a1fdd1afecc5655ae10db50dc5fe5b29a3b')
     proof_path = Data.from_hex(Web3.keccak(hexstr=trie_proofs[3]['address']).hex())
     proof = list(map(lambda element: Data.from_hex(element).to_ints(), trie_proofs[3]['accountProof']))
 
@@ -184,7 +225,7 @@ async def test_verify_valid_transaction_proof(factory):
     starknet, trie_proofs_contract = factory
 
     txns_root = Data.from_hex('0x51a8f471a6eed8d7da6aa588eb4e9a0764770f5c20b0e1e05c1210abbb05dd78')
-    proof_path = proof_path = Data.from_hex("0x" + encode(Data.from_hex(transaction_proofs[0]['transaction']['transactionIndex']).to_bytes()).hex())
+    proof_path = Data.from_hex("0x" + encode(Data.from_hex(transaction_proofs[0]['transaction']['transactionIndex']).to_bytes()).hex())
     proof = list(map(lambda element: Data.from_hex(element).to_ints(), transaction_proofs[0]['txProof']))
 
     # Python implementation as a reference

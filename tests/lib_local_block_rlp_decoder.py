@@ -3,6 +3,7 @@ from utils.block_header import build_block_header
 from utils.benchmarks.blockheader_rlp_extractor import getBaseFee, getBeneficiary, getParentHash, getOmmersHash, getStateRoot, getBlocknumber, getDifficulty, getTransactionsRoot, getReceiptsRoot, getGasLimit, getGasUsed, getTimestamp
 from mocks.blocks import mocked_blocks
 from utils.types import Data
+from hexbytes.main import HexBytes
 
 
 @pytest.mark.asyncio
@@ -44,8 +45,8 @@ async def test_decode_beneficiary():
     block_rlp_formatted = Data.from_bytes(block_rlp).to_ints()
 
     extracted_hash = Data.from_ints(getBeneficiary(block_rlp_formatted)).to_bytes()
-
-    assert bytes.fromhex(block["miner"][2:]) == extracted_hash
+    print(extracted_hash)
+    assert HexBytes(block["miner"]) == extracted_hash
 
 @pytest.mark.asyncio
 async def test_decode_state_root():

@@ -10,6 +10,7 @@ from rlp.sedes import (
 from eth_utils import to_bytes
 from web3 import Web3
 
+from hexbytes.main import HexBytes
 
 address = Binary.fixed_length(20, allow_empty=True)
 hash32 = Binary.fixed_length(32)
@@ -48,7 +49,8 @@ def build_block_header(block: BlockData) -> BlockHeader:
     header = BlockHeader(
         block["parentHash"],
         block["sha3Uncles"],
-        to_bytes(block["miner"]),
+        #to_bytes(int(block["miner"], 16)),
+        HexBytes(block["miner"]),
         block["stateRoot"],
         block['transactionsRoot'],
         block["receiptsRoot"],

@@ -144,9 +144,9 @@ async def test_prove_account(registry_initialized):
         flat_proof_sizes_bytes += [proof_element.length]
         flat_proof_sizes_words += [len(proof_element.values)]
 
-    print('flat_account_proof_sizes_bytes ',flat_proof_sizes_bytes)       
-    print('flat_proof_sizes_words ',flat_proof_sizes_words)
-    print('flat_proof ',flat_proof)
+    # print('flat_account_proof_sizes_bytes ',flat_proof_sizes_bytes)       
+    # print('flat_proof_sizes_words ',flat_proof_sizes_words)
+    # print('flat_proof ',flat_proof)
 
     options_set = 15 # saves everything in state
 

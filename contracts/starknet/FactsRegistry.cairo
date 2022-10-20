@@ -19,7 +19,7 @@ from starknet.types import (
 from starknet.lib.keccak_std_be import keccak256
 from starkware.cairo.common.cairo_keccak.keccak import finalize_keccak
 
-from starknet.lib.trie_proofs import verify_proof, log_array
+from starknet.lib.trie_proofs import verify_proof
 from starknet.lib.ints_to_uint256 import ints_to_uint256
 from starknet.lib.bitset import bitset_get
 from starknet.lib.extract_from_rlp import to_list, extract_list_values, extractElement, extract_data

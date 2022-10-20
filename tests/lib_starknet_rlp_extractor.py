@@ -229,22 +229,22 @@ async def test_extract_element(factory):
     assert result.res == [42]
 
 
-@pytest.mark.asyncio
-async def test_random(factory):
-    starknet, extract_rlp_contract = factory
-    for length in range (0, 35):
-        input = Data.from_bytes(random_bytes(length))
-        for start_byte in range(0, length):
-            for size in range(0, length-start_byte+1):
-                # print(input.to_hex())
-                # print(input.to_ints().values)
-                extracted_words_call = await extract_rlp_contract.test_extractData(start_byte, size, input.to_ints().length, input.to_ints().values).call()
-                output = Data.from_ints(IntsSequence(extracted_words_call.result.res, extracted_words_call.result.res_len_bytes))
-                expected_output = Data.from_bytes(input.to_bytes()[start_byte:start_byte+size])
-                if output != expected_output:
-                    print(input.to_hex())
-                    print(output.to_hex())
-                    print(expected_output.to_hex())
-                assert output == expected_output
+# enable the test below selectively to debug because the test takes a long time
 
-
+# @pytest.mark.asyncio
+# async def test_random(factory):
+#     starknet, extract_rlp_contract = factory
+#     for length in range (0, 35):
+#         input = Data.from_bytes(random_bytes(length))
+#         for start_byte in range(0, length):
+#             for size in range(0, length-start_byte+1):
+#                 print(input.to_hex())
+#                 print(input.to_ints().values)
+#                 extracted_words_call = await extract_rlp_contract.test_extractData(start_byte, size, input.to_ints().length, input.to_ints().values).call()
+#                 output = Data.from_ints(IntsSequence(extracted_words_call.result.res, extracted_words_call.result.res_len_bytes))
+#                 expected_output = Data.from_bytes(input.to_bytes()[start_byte:start_byte+size])
+#                 if output != expected_output:
+#                     print(input.to_hex())
+#                     print(output.to_hex())
+#                     print(expected_output.to_hex())
+#                 assert output == expected_output

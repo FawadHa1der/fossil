@@ -24,9 +24,8 @@ def merkle_patricia_input_decode(input: IntsSequence) -> List[int]:
         assert False
 
 
-    # if skip_nibbles > input.length:
-    #     print("XXXXXXXXXXXXXXXXXXX")
-    #     return []
+    if skip_nibbles > input.length:
+        return []
 
     decoded = words64_to_nibbles(input, skip_nibbles)
     return decoded
