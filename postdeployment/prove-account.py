@@ -180,7 +180,7 @@ one_over_p = 1/p
 print("one_over_p: ", one_over_p)
 print("sqrtPriceX96: ", sqrtPriceX96)
 raw_price_mine =one_over_p * 10**decimals
-print("raw_price_mine: ", raw_price_mine)
+print("Price of ETH in usdc : ", raw_price_mine  , " is the Uniswap Pool", pool_contract.address)
 
 # raw_price = (sqrtPriceX96 * sqrtPriceX96 * 10**decimals >> (96 * 2)) / (
 #     10**decimals
