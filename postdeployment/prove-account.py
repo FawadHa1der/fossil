@@ -167,17 +167,26 @@ pool_contract = uniswap.get_pool_instance( web3.toChecksumAddress(usdc), web3.to
 # price_input = uniswap.get_price_input(web3.toChecksumAddress(weth), web3.toChecksumAddress(usdc), 3000, 1000000000000000000)
 # print(f'Price input {price_input}')
 # print(f'Pool contract address {pool_contract.address}')
-decimals = 18
+decimals = 12 # 12 decimals because USDC has 6 decimals and eth has 18 decimals.
 slot0Data = pool_contract.functions.slot0().call(block_identifier=start_block_number)
 
 print("Slot0Data: ", slot0Data)
 sqrtPriceX96 = slot0Data[0]
+Q96 = 2**96
+p = ((sqrtPriceX96 )/ (Q96 )) ** 2
+print("p: ", p)
 
-raw_price = (sqrtPriceX96 * sqrtPriceX96 * 10**decimals >> (96 * 2)) / (
-    10**decimals
-)
+one_over_p = 1/p
+print("one_over_p: ", one_over_p)
+print("sqrtPriceX96: ", sqrtPriceX96)
+raw_price_mine =one_over_p * 10**decimals
+print("raw_price_mine: ", raw_price_mine)
 
-print("Price: ", raw_price)
+# raw_price = (sqrtPriceX96 * sqrtPriceX96 * 10**decimals >> (96 * 2)) / (
+#     10**decimals
+# )
+
+# print("Price: ", raw_price)
 proof = web3.eth.get_proof(pool_contract.address, [0], start_block_number)
 jsonProof = web3.toJSON(proof)
 
