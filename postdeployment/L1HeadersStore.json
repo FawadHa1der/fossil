@@ -1,0 +1,341 @@
+[
+    {
+        "members": [
+            {
+                "name": "word_1",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "word_2",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "word_3",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "word_4",
+                "offset": 3,
+                "type": "felt"
+            }
+        ],
+        "name": "Keccak256Hash",
+        "size": 4,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "word_1",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "word_2",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "word_3",
+                "offset": 2,
+                "type": "felt"
+            }
+        ],
+        "name": "Address",
+        "size": 3,
+        "type": "struct"
+    },
+    {
+        "inputs": [],
+        "name": "get_initialized",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_parent_hash",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Keccak256Hash"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_latest_l1_block",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_state_root",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Keccak256Hash"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_transactions_root",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Keccak256Hash"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_receipts_root",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Keccak256Hash"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_uncles_hash",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Keccak256Hash"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_beneficiary",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_difficulty",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_base_fee",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_timestamp",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "get_gas_used",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "l1_messages_origin",
+                "type": "felt"
+            }
+        ],
+        "name": "initialize",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "parent_hash_len",
+                "type": "felt"
+            },
+            {
+                "name": "parent_hash",
+                "type": "felt*"
+            },
+            {
+                "name": "block_number",
+                "type": "felt"
+            }
+        ],
+        "name": "receive_from_l1",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "options_set",
+                "type": "felt"
+            },
+            {
+                "name": "block_number",
+                "type": "felt"
+            },
+            {
+                "name": "block_header_rlp_bytes_len",
+                "type": "felt"
+            },
+            {
+                "name": "block_header_rlp_len",
+                "type": "felt"
+            },
+            {
+                "name": "block_header_rlp",
+                "type": "felt*"
+            }
+        ],
+        "name": "process_block",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "options_set",
+                "type": "felt"
+            },
+            {
+                "name": "start_block_number",
+                "type": "felt"
+            },
+            {
+                "name": "block_headers_lens_bytes_len",
+                "type": "felt"
+            },
+            {
+                "name": "block_headers_lens_bytes",
+                "type": "felt*"
+            },
+            {
+                "name": "block_headers_lens_words_len",
+                "type": "felt"
+            },
+            {
+                "name": "block_headers_lens_words",
+                "type": "felt*"
+            },
+            {
+                "name": "block_headers_concat_len",
+                "type": "felt"
+            },
+            {
+                "name": "block_headers_concat",
+                "type": "felt*"
+            }
+        ],
+        "name": "process_till_block",
+        "outputs": [],
+        "type": "function"
+    }
+]

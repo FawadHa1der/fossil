@@ -1,3 +1,5 @@
 {
-  "python.venvPath": "${workspaceFolder}/.tox/py37/bin/python"
+  "python.venvPath": "${workspaceFolder}/.tox/py37/bin/python",
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }
